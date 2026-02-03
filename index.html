@@ -335,9 +335,9 @@
         <div class="slide" id="s7">
             <div class="content-area" style="text-align: center;">
                 <h1 style="color: var(--neon-yellow); font-size: 80px;">PRACTICE LAB</h1>
-                <p style="font-size: 24px; color: var(--neon-cyan);">A 10-Question Knowledge Scan</p>
+                <p style="font-size: 24px; color: var(--neon-cyan);">A 20-Question Knowledge Scan</p>
                 <div class="tile" style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    <p>Identify the correct demonstrative usage based on distance, number, and grammar rules.</p>
+                    <p>Identify correct demonstrative usage and distinguish between adjectives and pronouns based on your textbook exercises.</p>
                 </div>
                 <button onclick="startQuiz()" class="nav-btn" style="margin-top: 30px; border-color: var(--neon-magenta); color: var(--neon-magenta);">Begin Quiz</button>
             </div>
@@ -346,7 +346,7 @@
 
         <!-- Slide 8: Interactive Quiz -->
         <div class="slide" id="s8">
-            <h2 class="slide-title">Knowledge Scan: <span id="q-num">1</span>/10</h2>
+            <h2 class="slide-title">Knowledge Scan: <span id="q-num">1</span>/20</h2>
             <div class="content-area">
                 <div id="quiz-container">
                     <p id="question-text" style="font-size: 28px; margin-bottom: 20px;"></p>
@@ -364,7 +364,7 @@
                 <h1 style="color: var(--neon-green); font-size: 80px;">SCAN COMPLETE</h1>
                 <p style="font-size: 24px; color: var(--neon-cyan);">Your Performance Data:</p>
                 <div style="font-size: 120px; font-weight: 900; color: #fff; margin: 20px 0;">
-                    <span id="final-score">0</span><span style="font-size: 40px; color: var(--neon-magenta);">/10</span>
+                    <span id="final-score">0</span><span style="font-size: 40px; color: var(--neon-magenta);">/20</span>
                 </div>
                 <button onclick="location.reload()" class="nav-btn">Re-initialize</button>
             </div>
@@ -384,17 +384,31 @@
         let quizIndex = 0;
         let score = 0;
 
+        // 20 Questions based on Exercises 1 & 2 from provided images
         const quizData = [
-            { q: "Which word is singular and points to something close?", a: ["This", "That", "These", "Those"], c: 0 },
-            { q: "Is 'That' a Pronoun or Adjective in: 'That is a beautiful piano.'?", a: ["Adjective", "Pronoun"], c: 1 },
-            { q: "Which is correct?", a: ["This here rattle", "This rattle"], c: 1 },
-            { q: "Complete: 'Consider buying ____ bicycle' (speaker is touching the bike).", a: ["This", "That", "Those"], c: 0 },
-            { q: "Which word is plural and points to things at a distance?", a: ["These", "Those", "That"], c: 1 },
-            { q: "Correct the error: '____ finger cymbals are small.'", a: ["Them", "Those", "This"], c: 1 },
-            { q: "Demonstrative adjectives point out something and ____.", a: ["Describe nouns", "Replace nouns", "Both"], c: 0 },
-            { q: "Complete: '____ mountains are enormous.' (far away)", a: ["These", "This", "Those"], c: 2 },
-            { q: "True or False: Demonstrative pronouns stand alone.", a: ["True", "False"], c: 0 },
-            { q: "The words 'this' and 'that' are ____.", a: ["Plural", "Singular", "Irregular"], c: 1 }
+            // Exercise 1 Source
+            { q: "(Them, Those) shells from Fiji certainly make an interesting collection.", a: ["Them", "Those"], c: 1 },
+            { q: "Tools like the ones in (this, these) exhibit have been used for years.", a: ["this", "these"], c: 0 },
+            { q: "(Those, These) coins in my hand are Spanish money.", a: ["Those", "These"], c: 1 },
+            { q: "Which is correct? (These, These here) speakers provide a clearer sound.", a: ["These", "These here"], c: 0 },
+            { q: "(This, That) dessert Akili has in the back of the room is baklava.", a: ["This", "That"], c: 1 },
+            { q: "(Them, Those) seeds will produce lettuce and carrots.", a: ["Them", "Those"], c: 1 },
+            { q: "Statues like (this here, this) one are made from bronze.", a: ["this here", "this"], c: 1 },
+            
+            // Exercise 2 Source: Adjective vs Pronoun
+            { q: "In 'This appears to be the best seat', is 'This' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 1 },
+            { q: "In 'Please send me those in the mail', is 'those' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 1 },
+            { q: "In 'Does anyone know how to bake this cake?', is 'this' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 0 },
+            { q: "In 'You can check that book out tomorrow', is 'that' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 0 },
+            { q: "In 'That singer is quite talented', is 'That' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 0 },
+            { q: "In 'Those do not heat as well as some', is 'Those' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 1 },
+            { q: "In 'Take these to the room down the hall', is 'these' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 1 },
+            { q: "In 'This aisle contains what Susan wants', is 'This' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 0 },
+            { q: "In 'These tickets are for the concert', is 'These' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 0 },
+            { q: "In 'Dave hopes that will help us', is 'that' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 1 },
+            { q: "In 'George painted those posters', is 'those' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 0 },
+            { q: "In 'This will surely amuse Hannah’s guest', is 'This' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 1 },
+            { q: "In 'Those tangerines taste delicious', is 'Those' a pronoun or adjective?", a: ["Adjective", "Pronoun"], c: 0 }
         ];
 
         function move(dir) {
@@ -451,7 +465,7 @@
             setTimeout(() => {
                 quizIndex++;
                 loadQuestion();
-            }, 1500);
+            }, 1000);
         }
 
         function handleResize() {

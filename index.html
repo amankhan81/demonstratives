@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstratives: Neon Edition | Amanullah Khan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-magenta: #ff00ff;
+            --neon-green: #39ff14;
+            --neon-yellow: #fff01f;
+            --bg-dark: #050505;
+            --glass: rgba(15, 23, 42, 0.95);
+        }
+
+        * { box-sizing: border-box; }
+        
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            font-family: 'Rajdhani', sans-serif;
+            color: #fff;
+            overflow: hidden; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #presentation-root {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 100px rgba(0,0,0,1);
+            transform-origin: center;
+            flex-shrink: 0;
+        }
+
+        .slide {
+            display: none; 
+            background: var(--glass);
+            border-radius: 24px;
+            width: 100%;
+            height: 100%;
+            padding: 50px 100px 130px 100px; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            flex-direction: column;
+            backdrop-filter: blur(20px);
+            animation: slideEnter 0.4s ease-out forwards;
+        }
+
+        .slide.active { display: flex; }
+
+        @keyframes slideEnter {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; margin: 0; }
+        p, li, td, th { font-size: 22px; line-height: 1.5; color: #cbd5e1; }
+
+        .slide-title { 
+            font-size: 48px; 
+            font-weight: 900; 
+            margin-bottom: 25px; 
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+            border-left: 10px solid var(--neon-magenta);
+            padding-left: 25px;
+        }
+
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: start; }
+        
+        .tile { 
+            background: rgba(255, 255, 255, 0.04); 
+            border-radius: 20px; 
+            padding: 25px; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .tile:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.08);
+            transform: translateY(-5px);
+        }
+        .tile h3 { font-size: 24px; margin-bottom: 12px; color: var(--neon-magenta); text-shadow: 0 0 5px var(--neon-magenta); }
+
+        /* Navigation Controls - BOTTOM LEFT */
+        .nav-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 100px;
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(0, 243, 255, 0.1);
+            border: 3px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 10px 35px;
+            border-radius: 10px;
+            font-family: 'Orbitron';
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-cyan);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.15;
+            cursor: not-allowed;
+            border-color: #334155;
+            color: #334155;
+            box-shadow: none;
+        }
+
+        /* Exercise Quiz Style */
+        #quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 20px;
+            text-align: left;
+        }
+        .quiz-option:hover { border-color: var(--neon-cyan); background: rgba(0, 243, 255, 0.1); }
+        .quiz-option.correct { background: rgba(57, 255, 20, 0.2) !important; border-color: var(--neon-green) !important; color: var(--neon-green); }
+        .quiz-option.wrong { background: rgba(255, 0, 255, 0.2) !important; border-color: var(--neon-magenta) !important; color: var(--neon-magenta); }
+
+        /* Signature - BOTTOM RIGHT */
+        .signature {
+            position: absolute;
+            bottom: 40px;
+            right: 100px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+        .signature span { color: var(--neon-cyan); font-weight: bold; }
+
+        .highlight { color: var(--neon-yellow); font-weight: bold; }
+        .example-box { border-left: 5px solid var(--neon-green); padding: 15px 20px; background: rgba(57, 255, 20, 0.05); margin-top: 10px; font-style: italic; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { color: var(--neon-cyan); text-align: left; padding: 15px; border-bottom: 2px solid var(--neon-cyan); font-family: 'Orbitron'; font-size: 18px; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 22px; }
+
+        .progress-indicator {
+            position: absolute;
+            top: 40px;
+            right: 100px;
+            font-family: 'Orbitron';
+            color: var(--neon-cyan);
+            letter-spacing: 3px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-root">
+        <div class="progress-indicator">
+            <span id="curr-num">1</span> / <span id="total-num">9</span>
+        </div>
+
+        <!-- Slide 1: Welcome -->
+        <div class="slide active" id="s1">
+            <div class="content-area" style="text-align: center;">
+                <p style="color: var(--neon-magenta); font-weight: bold; letter-spacing: 12px; font-family: 'Orbitron'; margin-bottom: 20px;">LESSON.32</p>
+                <h1 style="font-size: 100px; margin: 0; text-shadow: 0 0 20px var(--neon-cyan);">DEMONSTRATIVES</h1>
+                <p style="font-size: 34px; color: var(--neon-cyan); margin-top: 10px;">Pointing Out People, Places & Things</p>
+                <div style="margin-top: 60px; padding: 25px; border: 2px dashed rgba(0, 243, 255, 0.3); border-radius: 15px; display: inline-block;">
+                    <p style="font-size: 24px;">This • That • These • Those</p>
+                </div>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 2: The Core 4 -->
+        <div class="slide" id="s2">
+            <h2 class="slide-title">1. The Demonstratives</h2>
+            <div class="content-area">
+                <p>Demonstratives <span class="highlight">point out</span> specific people, places, or things. They help us understand where an object is in relation to the speaker.</p>
+                <div class="two-column" style="margin-top: 30px;">
+                    <div class="tile">
+                        <h3>Close By</h3>
+                        <p><span class="highlight">This</span> (Singular)</p>
+                        <p><span class="highlight">These</span> (Plural)</p>
+                        <p><em>Example: "Who can play <strong>these</strong> games?"</em></p>
+                    </div>
+                    <div class="tile" style="border-color: var(--neon-magenta);">
+                        <h3>At a Distance</h3>
+                        <p><span class="highlight">That</span> (Singular)</p>
+                        <p><span class="highlight">Those</span> (Plural)</p>
+                        <p><em>Example: "<strong>Those</strong> mountains are enormous."</em></p>
+                    </div>
+                </div>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 3: Adjectives vs Pronouns -->
+        <div class="slide" id="s3">
+            <h2 class="slide-title">2. Usage: Adjectives</h2>
+            <div class="content-area">
+                <p>When these words <span class="highlight">describe nouns</span>, they are called <strong>Demonstrative Adjectives</strong>.</p>
+                <div class="tile" style="margin-top: 20px;">
+                    <p>They answer the questions: <span class="highlight">Which one?</span> or <span class="highlight">Which ones?</span></p>
+                    <ul style="margin-top: 15px;">
+                        <li><strong>That</strong> piano is too heavy to move.</li>
+                        <li>Consider buying <strong>this</strong> bicycle.</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    "<strong>Those</strong> finger cymbals are the smallest cymbals." (Describing the cymbals)
+                </div>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 4: Pronouns -->
+        <div class="slide" id="s4">
+            <h2 class="slide-title">3. Usage: Pronouns</h2>
+            <div class="content-area">
+                <p>When these words <span class="highlight">take the place of nouns</span>, they are called <strong>Demonstrative Pronouns</strong>.</p>
+                <div class="tile" style="margin-top: 20px; border-color: var(--neon-magenta);">
+                    <p>They stand alone in the sentence.</p>
+                    <ul style="margin-top: 15px;">
+                        <li><strong>That</strong> is a beautiful piano.</li>
+                        <li><strong>This</strong> is the world's best bicycle.</li>
+                        <li><strong>Those</strong> are the Alps.</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    "Who can play <strong>these</strong>?" (Replacing the word 'games')
+                </div>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 5: Comparison Matrix -->
+        <div class="slide" id="s5">
+            <h2 class="slide-title">4. Side-by-Side Matrix</h2>
+            <div class="content-area">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Demonstrative Adjectives</th>
+                            <th>Demonstrative Pronouns</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>That <span class="highlight">piano</span> is heavy.</td>
+                            <td>That is a <span class="highlight">piano</span>.</td>
+                        </tr>
+                        <tr>
+                            <td>Consider buying this <span class="highlight">bicycle</span>.</td>
+                            <td>This is a <span class="highlight">bicycle</span>.</td>
+                        </tr>
+                        <tr>
+                            <td>Those <span class="highlight">mountains</span> are huge.</td>
+                            <td>Those are the <span class="highlight">Alps</span>.</td>
+                        </tr>
+                        <tr>
+                            <td>Who can play these <span class="highlight">games</span>?</td>
+                            <td>Who can play these?</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 6: Errors to Avoid -->
+        <div class="slide" id="s6">
+            <h2 class="slide-title">5. Critical Errors</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div class="tile">
+                        <h3>The "Here/There" Trap</h3>
+                        <p>Don't use <strong>here</strong> or <strong>there</strong> with demonstratives. They already point out location!</p>
+                        <p style="color: var(--neon-magenta); font-size: 18px;">Wrong: This <u>here</u> rattle.</p>
+                        <p style="color: var(--neon-green); font-size: 18px;">Right: <strong>This</strong> ancient rattle.</p>
+                    </div>
+                    <div class="tile" style="border-color: var(--neon-yellow);">
+                        <h3>The "Them" Error</h3>
+                        <p>Never use the pronoun <strong>them</strong> as an adjective.</p>
+                        <p style="color: var(--neon-magenta); font-size: 18px;">Wrong: <u>Them</u> finger cymbals.</p>
+                        <p style="color: var(--neon-green); font-size: 18px;">Right: <strong>Those</strong> finger cymbals.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 7: Quiz Start -->
+        <div class="slide" id="s7">
+            <div class="content-area" style="text-align: center;">
+                <h1 style="color: var(--neon-yellow); font-size: 80px;">PRACTICE LAB</h1>
+                <p style="font-size: 24px; color: var(--neon-cyan);">A 10-Question Knowledge Scan</p>
+                <div class="tile" style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <p>Identify the correct demonstrative usage based on distance, number, and grammar rules.</p>
+                </div>
+                <button onclick="startQuiz()" class="nav-btn" style="margin-top: 30px; border-color: var(--neon-magenta); color: var(--neon-magenta);">Begin Quiz</button>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 8: Interactive Quiz -->
+        <div class="slide" id="s8">
+            <h2 class="slide-title">Knowledge Scan: <span id="q-num">1</span>/10</h2>
+            <div class="content-area">
+                <div id="quiz-container">
+                    <p id="question-text" style="font-size: 28px; margin-bottom: 20px;"></p>
+                    <div id="options-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- Options injected here -->
+                    </div>
+                </div>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- Slide 9: Results -->
+        <div class="slide" id="s9">
+            <div class="content-area" style="text-align: center;">
+                <h1 style="color: var(--neon-green); font-size: 80px;">SCAN COMPLETE</h1>
+                <p style="font-size: 24px; color: var(--neon-cyan);">Your Performance Data:</p>
+                <div style="font-size: 120px; font-weight: 900; color: #fff; margin: 20px 0;">
+                    <span id="final-score">0</span><span style="font-size: 40px; color: var(--neon-magenta);">/10</span>
+                </div>
+                <button onclick="location.reload()" class="nav-btn">Re-initialize</button>
+            </div>
+            <div class="signature">Created by: <span>Amanullah Khan</span></div>
+        </div>
+
+        <!-- NAVIGATION CONTROLS - BOTTOM LEFT -->
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn" onclick="move(-1)" disabled>Previous</button>
+            <button class="nav-btn" id="nextBtn" onclick="move(1)">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let current = 1;
+        const total = 9;
+        let quizIndex = 0;
+        let score = 0;
+
+        const quizData = [
+            { q: "Which word is singular and points to something close?", a: ["This", "That", "These", "Those"], c: 0 },
+            { q: "Is 'That' a Pronoun or Adjective in: 'That is a beautiful piano.'?", a: ["Adjective", "Pronoun"], c: 1 },
+            { q: "Which is correct?", a: ["This here rattle", "This rattle"], c: 1 },
+            { q: "Complete: 'Consider buying ____ bicycle' (speaker is touching the bike).", a: ["This", "That", "Those"], c: 0 },
+            { q: "Which word is plural and points to things at a distance?", a: ["These", "Those", "That"], c: 1 },
+            { q: "Correct the error: '____ finger cymbals are small.'", a: ["Them", "Those", "This"], c: 1 },
+            { q: "Demonstrative adjectives point out something and ____.", a: ["Describe nouns", "Replace nouns", "Both"], c: 0 },
+            { q: "Complete: '____ mountains are enormous.' (far away)", a: ["These", "This", "Those"], c: 2 },
+            { q: "True or False: Demonstrative pronouns stand alone.", a: ["True", "False"], c: 0 },
+            { q: "The words 'this' and 'that' are ____.", a: ["Plural", "Singular", "Irregular"], c: 1 }
+        ];
+
+        function move(dir) {
+            document.getElementById(`s${current}`).classList.remove('active');
+            current += dir;
+            if (current < 1) current = 1;
+            if (current > total) current = total;
+            document.getElementById(`s${current}`).classList.add('active');
+            
+            document.getElementById('curr-num').innerText = current;
+            document.getElementById('prevBtn').disabled = current === 1;
+            document.getElementById('nextBtn').disabled = current === total;
+        }
+
+        function startQuiz() {
+            move(1);
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (quizIndex >= quizData.length) {
+                document.getElementById('final-score').innerText = score;
+                move(1);
+                return;
+            }
+            const data = quizData[quizIndex];
+            document.getElementById('q-num').innerText = quizIndex + 1;
+            document.getElementById('question-text').innerText = data.q;
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            data.a.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectOption(idx) {
+            const data = quizData[quizIndex];
+            const options = document.querySelectorAll('.quiz-option');
+            if (idx === data.c) {
+                options[idx].classList.add('correct');
+                score++;
+            } else {
+                options[idx].classList.add('wrong');
+                options[data.c].classList.add('correct');
+            }
+            
+            // Lock options
+            options.forEach(opt => opt.onclick = null);
+
+            setTimeout(() => {
+                quizIndex++;
+                loadQuestion();
+            }, 1500);
+        }
+
+        function handleResize() {
+            const root = document.getElementById('presentation-root');
+            const scale = Math.min(
+                (window.innerWidth - 40) / 1280,
+                (window.innerHeight - 60) / 720,
+                1
+            );
+            root.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.onload = handleResize;
+        handleResize();
+    </script>
+</body>
+</html>
